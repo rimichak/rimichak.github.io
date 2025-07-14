@@ -453,5 +453,13 @@ form .btn2{
   nav ul li a {
     font-size: 14px;
   }
+  /* Reduce space between headings and paragraphs */
+  #about .about-col-2 h3 {
+    margin-bottom: 4px; /* tighten spacing */
+  }
+  #about .about-col-2 p {
+    margin-top: 0;       /* remove extra top margin */
+    line-height: 1.6;
+  }
   
 }
