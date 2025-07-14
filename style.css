@@ -454,7 +454,7 @@ form .btn2{
     font-size: 14px;
   }
   /* Reduce space between headings and paragraphs */
-  #about .about-col-2 h1 {
+  #about .about-col-2 h1.sub-title {
     margin-bottom: 4px; /* tighten spacing */
   }
   #about .about-col-2 p {
