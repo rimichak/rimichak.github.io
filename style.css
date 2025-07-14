@@ -332,6 +332,18 @@ form .btn2{
     flex-basis: 100%;
     margin: 0 0 30px 0;
   }
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  /* About section image sizing */
+  .about-col-1 img {
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+  }
 
   /* 2. Typography */
   .header-text h1 {
