@@ -442,5 +442,16 @@ form .btn2{
 #header .header-text {
   margin-top: 15%;  /* tweak as needed for better positioning */
 }  
+/* --- Reduced Font Sizes --- */
+  #about p,
+  #about .tab-contents li,
+  #services p,
+  #portfolio .layer p,
+  #contact-left p,
+  .contact-right form input,
+  .contact-right form textarea,
+  nav ul li a {
+    font-size: 14px;
+  }
   
 }
