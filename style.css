@@ -459,7 +459,21 @@ form .btn2{
   }
   #about h1.sub-title + p {
     margin-top: 0;       /* remove extra top margin */
+  }
+    #about .about-col-2 p,
+  #services p,
+  #portfolio .layer p,
+  #contact-left p,
+  .contact-right form p {
+    padding: 12px;
+    box-sizing: border-box;
     line-height: 1.6;
+  }
+  #about {
+    margin-bottom: 20px;
+  }
+  #services {
+    padding-top: 20px;
   }
   
 }
