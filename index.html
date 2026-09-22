@@ -1,194 +1,569 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio website</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/b597561e05.js" crossorigin="anonymous"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rimi Chakraborty | Full stack web developer</title>
+<meta name="description" content="Rimi Chakraborty is a full stack web developer in Kolkata. She builds responsive front ends and the Python back ends behind them.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23FFC933%22/><text x=%2250%22 y=%2272%22 font-size=%2266%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22%2313203B%22 font-family=%22sans-serif%22>R</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #F4F7FB;
+    --surface: #FFFFFF;
+    --ink: #13203B;
+    --muted: #55627A;
+    --line: #D6DDEA;
+    --blue: #2450C8;
+    --taxi: #FFC933;
+    --on-taxi: #13203B;
+    --panel: #101A30;
+    --panel-line: #24314D;
+    --panel-text: #E4EBF8;
+    --panel-key: #A9BEEA;
+    --panel-str: #FFC933;
+    --focus: #2450C8;
+    --font-head: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --font-code: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    box-sizing: border-box;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0C1424;
+      --surface: #131E35;
+      --ink: #EAF0FB;
+      --muted: #9AA8C3;
+      --line: #24314D;
+      --blue: #7EA2FF;
+      --panel: #0A1122;
+      --focus: #FFC933;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0C1424;
+    --surface: #131E35;
+    --ink: #EAF0FB;
+    --muted: #9AA8C3;
+    --line: #24314D;
+    --blue: #7EA2FF;
+    --panel: #0A1122;
+    --focus: #FFC933;
+  }
+
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--font-head); line-height: 1.1; margin: 0; letter-spacing: -0.015em; }
+  p { margin: 0; }
+  a { color: var(--blue); text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+  ul { margin: 0; padding: 0; list-style: none; }
+
+  .wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+  .skip {
+    position: absolute; left: 12px; top: -60px; background: var(--taxi); color: var(--on-taxi);
+    padding: 10px 16px; border-radius: 8px; font-weight: 600; z-index: 20; text-decoration: none;
+  }
+  .skip:focus { top: 12px; }
+
+  /* Header */
+  .site-header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; padding: 14px 0; }
+  .wordmark { font-family: var(--font-head); font-weight: 700; font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+  .nav { display: flex; align-items: center; gap: 6px 22px; flex-wrap: wrap; }
+  .nav a.link { color: var(--ink); text-decoration: none; font-weight: 500; font-size: 0.98rem; padding: 4px 0; border-bottom: 2px solid transparent; }
+  .nav a.link:hover { border-bottom-color: var(--taxi); }
+  .theme-btn {
+    font: inherit; font-size: 0.9rem; font-weight: 500; color: var(--ink);
+    background: transparent; border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 14px; cursor: pointer;
+  }
+  .theme-btn:hover { border-color: var(--ink); }
+
+  /* Hero */
+  .hero { padding: 72px 0 80px; }
+  .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+  .hero h1 { font-size: clamp(2.5rem, 5.6vw, 4.3rem); font-weight: 700; max-width: 14ch; }
+  .hero .lede { margin-top: 24px; max-width: 46ch; color: var(--muted); font-size: 1.15rem; }
+  .actions { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn {
+    display: inline-block; font: inherit; font-weight: 600; font-size: 1rem;
+    padding: 13px 24px; border-radius: 10px; text-decoration: none; cursor: pointer;
+    border: 2px solid var(--ink); color: var(--ink); background: transparent;
+  }
+  .btn:hover { background: var(--ink); color: var(--bg); }
+  .btn.primary { background: var(--taxi); color: var(--on-taxi); border-color: var(--taxi); }
+  .btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+  /* API panel: the one memorable element */
+  .api { background: var(--panel); border: 1px solid var(--panel-line); border-radius: 14px; overflow: hidden; color: var(--panel-text); }
+  .api-top { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--panel-line); font-family: var(--font-code); font-size: 0.9rem; flex-wrap: wrap; }
+  .api-top .method { color: var(--panel-str); font-weight: 700; }
+  .api-top .path { color: var(--panel-text); }
+  .api-top .status { margin-left: auto; background: #163B2C; color: #7FE3B0; border-radius: 999px; padding: 2px 12px; font-size: 0.82rem; font-weight: 600; }
+  .api pre { margin: 0; padding: 20px 18px 22px; font-family: var(--font-code); font-size: 0.92rem; line-height: 1.75; overflow-x: auto; white-space: pre; }
+  .api .ln { display: block; opacity: 0; animation: show 0.01s linear forwards; animation-delay: calc(var(--i) * 110ms + 350ms); }
+  .api .in { padding-left: 2ch; }
+  .api .k { color: var(--panel-key); }
+  .api .s { color: var(--panel-str); }
+  .api .n { color: #7FE3B0; }
+  @keyframes show { to { opacity: 1; } }
+  .api-note { margin-top: 12px; color: var(--muted); font-size: 0.92rem; }
+
+  /* Sections */
+  section { padding: 84px 0; border-top: 1px solid var(--line); }
+  .sec-head { max-width: 62ch; margin-bottom: 44px; }
+  .sec-head h2 { font-size: clamp(1.9rem, 3.6vw, 2.7rem); }
+  .sec-head p { margin-top: 14px; color: var(--muted); }
+
+  /* About */
+  .about-grid { display: grid; grid-template-columns: 280px 1fr; gap: 56px; align-items: start; }
+  .portrait {
+    width: 280px; aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: var(--surface);
+    border: 1px solid var(--line); display: grid; place-items: center;
+  }
+  .portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .portrait .initials { font-family: var(--font-head); font-weight: 700; font-size: 4.5rem; color: var(--muted); }
+  .about-copy p { max-width: 62ch; }
+  .about-copy p + p { margin-top: 16px; }
+  .offers { margin-top: 36px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .offers h3 { font-size: 1.15rem; margin-bottom: 8px; }
+  .offers p { color: var(--muted); font-size: 1rem; }
+
+  /* Work */
+  .work-row {
+    display: grid; grid-template-columns: 240px 1fr auto; gap: 12px 40px; align-items: start;
+    padding: 30px 0; border-top: 1px solid var(--line);
+  }
+  .work-row:last-child { border-bottom: 1px solid var(--line); }
+  .work-row h3 { font-size: 1.4rem; }
+  .work-row .kind { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
+  .work-row .desc { max-width: 56ch; }
+  .work-row .built { margin-top: 10px; color: var(--muted); font-size: 0.95rem; }
+  .work-links { display: flex; gap: 18px; font-weight: 600; }
+  .work-note { margin-top: 22px; color: var(--muted); font-size: 0.98rem; }
+
+  /* Stack */
+  .stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+  .stack-grid h3 { font-size: 1.15rem; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid var(--taxi); display: inline-block; }
+  .stack-grid li { padding: 6px 0; }
+
+  /* Timeline: this content is a real sequence */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+  .two-col h3 { font-size: 1.5rem; margin-bottom: 28px; }
+  .timeline { position: relative; padding-left: 28px; border-left: 2px solid var(--line); }
+  .timeline li { position: relative; padding-bottom: 32px; }
+  .timeline li:last-child { padding-bottom: 0; }
+  .timeline li::before {
+    content: ""; position: absolute; left: -37px; top: 8px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--bg); border: 3px solid var(--taxi);
+  }
+  .timeline .when { color: var(--muted); font-size: 0.95rem; }
+  .timeline .what { font-family: var(--font-head); font-weight: 700; font-size: 1.2rem; margin-top: 2px; }
+  .timeline .where { font-weight: 500; }
+  .timeline .note { margin-top: 6px; color: var(--muted); font-size: 1rem; max-width: 46ch; }
+
+  /* Contact */
+  .contact-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: start; }
+  .contact-info ul { margin-top: 28px; display: grid; gap: 12px; }
+  .contact-info .label { color: var(--muted); display: inline-block; min-width: 88px; }
+  .form { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 30px; display: grid; gap: 20px; }
+  .field { display: grid; gap: 6px; }
+  .field label { font-weight: 600; font-size: 0.98rem; }
+  .field input, .field textarea {
+    font: inherit; color: var(--ink); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; width: 100%;
+  }
+  .field textarea { min-height: 150px; resize: vertical; }
+  .field input:focus-visible, .field textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; border-color: transparent; }
+  .field [aria-invalid="true"] { border-color: #C2413B; }
+  .err { color: #C2413B; font-size: 0.92rem; min-height: 1.2em; }
+  :root[data-theme="dark"] .err { color: #FF8A82; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err { color: #FF8A82; } }
+  .form .btn { justify-self: start; }
+  .form-status { min-height: 1.4em; font-size: 0.98rem; }
+  .form-status.ok { color: #1E7A4C; }
+  .form-status.bad { color: #C2413B; }
+  :root[data-theme="dark"] .form-status.ok { color: #7FE3B0; }
+  :root[data-theme="dark"] .form-status.bad { color: #FF8A82; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .form-status.ok { color: #7FE3B0; }
+    :root:not([data-theme="light"]) .form-status.bad { color: #FF8A82; }
+  }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 0.95rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero { padding: 48px 0 56px; }
+    .hero-grid, .about-grid, .contact-grid, .two-col { grid-template-columns: 1fr; gap: 40px; }
+    .portrait { width: min(280px, 100%); }
+    .offers, .stack-grid { grid-template-columns: 1fr; gap: 28px; }
+    .work-row { grid-template-columns: 1fr; gap: 10px; }
+    section { padding: 60px 0; }
+  }
+  @media (max-width: 520px) {
+    .form { padding: 22px 18px; }
+    .btn { width: 100%; text-align: center; }
+    .form .btn { justify-self: stretch; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .api .ln { opacity: 1; animation: none; }
+  }
+</style>
 </head>
+
 <body>
-    <div id="header">
-        <div class="container">
-            <nav>
-                <img src="image/logo.png" class="logo">
-                <ul id="sidemenu">
-                    <li><a href="#header">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#portfolio">Portfolio</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <i class="fa-regular fa-circle-xmark" onclick="closemenu()"></i>
-                </ul>
-                <i class="fa-solid fa-bars" onclick="openmenu()"></i>
-            </nav>
-            <div class="header-text">
-                <p>Fullstack Web Developer</p>
-                <h1>Hi, I'm <span>Rimi</span><br>Chakroborty from<br>West Bengal</h1>
-            </div>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="wordmark" href="#top">Rimi Chakraborty</a>
+    <nav class="nav" aria-label="Main">
+      <a class="link" href="#work">Work</a>
+      <a class="link" href="#stack">Stack</a>
+      <a class="link" href="#experience">Experience</a>
+      <a class="link" href="#contact">Contact</a>
+      <button class="theme-btn" id="themeBtn" type="button">Dark mode</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div id="top" class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>I build the screens people use and the servers behind them.</h1>
+        <p class="lede">I am a full stack web developer in Kolkata. I design clean interfaces, write the Python back ends that power them, and ship both.</p>
+        <div class="actions">
+          <a class="btn primary" href="image/my-cv.pdf" download>Download CV</a>
+          <a class="btn" href="#work">See my work</a>
         </div>
+      </div>
+
+      <div>
+        <div class="api" role="img" aria-label="A summary of Rimi written as an API response: full stack web developer in Kolkata with three years of experience, working in HTML, CSS, JavaScript, React, Python, FastAPI and PostgreSQL.">
+          <div class="api-top" aria-hidden="true">
+            <span class="method">GET</span>
+            <span class="path">/api/rimi</span>
+            <span class="status">200 OK</span>
+          </div>
+<pre aria-hidden="true"><span class="ln" style="--i:0">{</span><span class="ln in" style="--i:1"><span class="k">"name"</span>: <span class="s">"Rimi Chakraborty"</span>,</span><span class="ln in" style="--i:2"><span class="k">"role"</span>: <span class="s">"Full stack web developer"</span>,</span><span class="ln in" style="--i:3"><span class="k">"location"</span>: <span class="s">"Kolkata, West Bengal"</span>,</span><span class="ln in" style="--i:4"><span class="k">"years_building"</span>: <span class="n">3</span>,</span><span class="ln in" style="--i:5"><span class="k">"frontend"</span>: [<span class="s">"HTML"</span>, <span class="s">"CSS"</span>, <span class="s">"JavaScript"</span>, <span class="s">"React"</span>],</span><span class="ln in" style="--i:6"><span class="k">"backend"</span>: [<span class="s">"Python"</span>, <span class="s">"FastAPI"</span>, <span class="s">"PostgreSQL"</span>],</span><span class="ln in" style="--i:7"><span class="k">"studying"</span>: <span class="s">"B.Tech CSE, graduating 2027"</span>,</span><span class="ln in" style="--i:8"><span class="k">"email"</span>: <span class="s">"rimi.reach@gmail.com"</span></span><span class="ln" style="--i:9">}</span></pre>
+        </div>
+        <p class="api-note">The same introduction, written as an API response.</p>
+      </div>
     </div>
-    <!--about-->
-    <div id="about">
-        <div class="container">
-            <div class="row">
-                <div class="about-col-1">
-                    <img src="image/user.jpg" >
-                </div>
-                <div class="about-col-2">
-                    <h1 class="sub-title">About Me</h1>
-                    <p>Hi! I’m Rimi, a passionate web designer and full-stack developer based in Kolkata. 
-                        I combine clean, intuitive design with solid code to craft responsive websites and applications. 
-                        With expertise in HTML, CSS, JavaScript, and Python, I love bringing ideas to life—whether 
-                        it's an interactive UI or a data-driven backend.</p>
-                        <div class="tab-titles">
-                            <p class="tab-links active-link" onclick="opentab('skills')">Skills</p>
-                            <p class="tab-links" onclick="opentab('experience')">Experience</p>
-                            <p class="tab-links" onclick="opentab('education')">Education</p>
-                        </div>
-                        <div class="tab-contents active-tab" id="skills">
-                            <ul>
-                                <li><span>UI/UX</span><br>Desigining Web/App Interfaces</li>
-                                <li><span>Web Devlopment</span><br>Web App Development</li>
-                                <li><span>App Development</span><br>Building Android/ios apps</li>
-                        </ul>
-                        </div>
-                        <div class="tab-contents" id="experience">
-    <ul>
-        <li><span>2024 - current</span><br>Web designer at TexergeLab</li>
-        <li><span>2024</span><br>Intern at TexergeLab</li>
-    </ul>
-</div>
+  </div>
 
-                        <div class="tab-contents" id="education">
-                            <ul>
-                                <li><span>2020 - 2024</span><br>Diploma in CST at Women's Polytechnic, Kolkata</li>
-                                <li><span>2024 - 2027</span><br>Btech in CSE at Maulana Abul Kalam Azad Universsity.</li>
-                         </ul>
-                        </div>
-                        
-                </div>
-            </div>
+  <section id="about" aria-labelledby="about-h">
+    <div class="wrap about-grid">
+      <div class="portrait">
+        <img src="image/user.jpg" alt="Portrait of Rimi Chakraborty" onerror="this.remove(); document.getElementById('initials').hidden = false;">
+        <span class="initials" id="initials" hidden aria-hidden="true">RC</span>
+      </div>
+      <div class="about-copy">
+        <h2 id="about-h" style="font-size: clamp(1.9rem, 3.6vw, 2.7rem); margin-bottom: 20px;">A developer who cares about both halves of the product</h2>
+        <p>I started with HTML and CSS, then moved into JavaScript and Python because I wanted to build the whole thing, not just the surface. Three years in, I work on responsive interfaces, REST APIs and databases, and I like it most when the two sides are designed together.</p>
+        <p>I am finishing my B.Tech in Computer Science and Engineering, and I work with startups and teams that want interfaces people enjoy using.</p>
+        <div class="offers">
+          <div>
+            <h3>Websites</h3>
+            <p>Responsive, fast pages with clear navigation and layouts that read well on any screen.</p>
+          </div>
+          <div>
+            <h3>Interfaces</h3>
+            <p>Wireframes and prototypes built around what the user is trying to get done.</p>
+          </div>
+          <div>
+            <h3>Web apps</h3>
+            <p>Front ends connected to a real back end, with authentication, data and deployment handled.</p>
+          </div>
         </div>
+      </div>
     </div>
-    <!--services-->
-    <div id="services">
-        <div class="container">
-            <h1 class="sub-title">My Services</h1>
-            <div class="services-list">
-                <div>
-                    <i class="fa-solid fa-code"></i>
-                    <h2>Web Design</h2>
-                    <p>I create responsive, visually appealing websites that blend form and function. Whether designing a sleek business site or a dynamic portfolio,
-                         I focus on clear navigation, thoughtful layouts, and clean visuals—making every click intuitive and enjoyable.</p>
-                          <a href="#">Learn More</a>
-                </div>
-                <div>
-                    <i class="fa-solid fa-crop-simple"></i>
-                    <h2>UI/UX Design</h2>
-                    <p>I design clean,intuitive interfaces that put users first. Whether it's crafting wireframes, prototyping interactions, or refining visuals, I focus on solving real problems—making sure every click and swipe feels natural and purposeful. 
-                        My designs aim to delight users while helping businesses meet their goals..</p>
-                    <a href="#">Learn more</a>
-                </div>
-                <div>
-                    <i class="fa-brands fa-app-store"></i>
-                    <h2>App Development</h2>
-                    <p>I build mobile and web applications that seamlessly blend functionality with visual appeal. From initial sketches and wireframes to interactive prototypes and polished deployments, I follow a user-first process—plan features, develop using modern frameworks, test thoroughly, and iterate based on feedback. 
-                        My goal is to deliver fast-performing, reliable apps that users love and businesses can grow with.</p>
-                    <a href="#">Learn More</a>
-                </div>
-            </div>
-        </div>
+  </section>
+
+  <section id="work" aria-labelledby="work-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="work-h">Selected work</h2>
+        <p>A few projects and what I did on each.</p>
+      </div>
+
+      <!-- EDIT: replace the text, stack and links below with your real project details. -->
+      <div>
+        <article class="work-row">
+          <div>
+            <h3>Business website design</h3>
+            <p class="kind">Web design</p>
+          </div>
+          <div>
+            <p class="desc">Responsive websites with clear navigation and clean layouts, designed so visitors find what they need in a few clicks.</p>
+            <p class="built">Built with HTML, CSS, JavaScript</p>
+          </div>
+          <div class="work-links">
+            <a href="https://github.com/rimichak" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+
+        <article class="work-row">
+          <div>
+            <h3>Social media app</h3>
+            <p class="kind">Full stack app</p>
+          </div>
+          <div>
+            <p class="desc">A social feed with profiles and posts, covering the interface, the API and the database behind it.</p>
+            <p class="built">Built with React, FastAPI, PostgreSQL</p>
+          </div>
+          <div class="work-links">
+            <a href="https://github.com/rimichak" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+
+        <article class="work-row">
+          <div>
+            <h3>Restaurant app</h3>
+            <p class="kind">Mobile and web app</p>
+          </div>
+          <div>
+            <p class="desc">A restaurant app for browsing the menu and placing orders, with a simple flow from first tap to confirmation.</p>
+            <p class="built">Built with JavaScript, Python</p>
+          </div>
+          <div class="work-links">
+            <a href="https://github.com/rimichak" target="_blank" rel="noopener">Code</a>
+          </div>
+        </article>
+      </div>
+      <p class="work-note">More on <a href="https://github.com/rimichak" target="_blank" rel="noopener">GitHub</a>, and I write about what I build on <a href="https://medium.com/@rimi.reach" target="_blank" rel="noopener">Medium</a>.</p>
     </div>
-    <!--portfolio-->
-    <div id="portfolio">
-        <div class="container">
-            <h1 class="sub-title">My Work</h1>
-            <div class="work-list">
-                <div class="work">
-                    <img src="image/work1.jpg">
-                    <div class="layer">
-                        <h3>Web Design</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo nihil adipisci vel nulla!</p>
-                        <a href="#"><i class="fa-solid fa-up-right-from-square"></i></a>
-                    </div>
-                </div>
-                <div class="work">
-                    <img src="image/work2.jpg">
-                    <div class="layer">
-                        <h3>Social Media App</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam omnis porro doloremque quasi!</p>
-                        <a href="#"><i class="fa-solid fa-up-right-from-square"></i></a>
-                    </div>
-                </div>
-                <div class="work">
-                    <img src="image/work3.jpg">
-                    <div class="layer">
-                        <h3>Resturant App</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, sed.</p>
-                        <a href="#"><i class="fa-solid fa-up-right-from-square"></i></a>
-                    </div>
-                </div>
-            </div>
-            <a href="#" class="btn">See More</a>
+  </section>
 
+  <section id="stack" aria-labelledby="stack-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="stack-h">What I work with</h2>
+      </div>
+      <div class="stack-grid">
+        <div>
+          <h3>Front end</h3>
+          <ul>
+            <li>HTML and CSS</li>
+            <li>JavaScript</li>
+            <li>React</li>
+            <li>Responsive layout</li>
+          </ul>
         </div>
+        <div>
+          <h3>Back end</h3>
+          <ul>
+            <li>Python</li>
+            <li>FastAPI</li>
+            <li>PostgreSQL</li>
+            <li>REST APIs</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Design and tools</h3>
+          <ul>
+            <li>Wireframing and prototyping</li>
+            <li>UI and UX design</li>
+            <li>Git and GitHub</li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <!--contact-->
-    <div id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="contact-left">
-                    <h1 class="sub-title">Contact Me</h1>
-                    <p><i class="fa-solid fa-paper-plane"></i>rimi.reach@gmail.com</p>
-                    <p><i class="fa-solid fa-phone"></i>8617098208</p>
-                    <div class="social-icons">
-                        <a href="https://www.linkedin.com/in/rimi-chakraborty/"><i class="fa-brands fa-linkedin-in"></i></a>
-                        <a href="https://github.com/rimichak"><i class="fa-brands fa-github"></i></a>
-                        <a href="https://medium.com/@rimi.reach"><i class="fa-brands fa-medium"></i></a>
-                    </div>
-                    <a href="image/my-cv.pdf" download class="btn btn2">Download CV</a>
-                </div>
-                <div class="contact-right">
-                    <form>
-                        <input type="text" name="Name" placeholder="Your Name" required>
-                        <input type="email" name="email" placeholder="Your Email" required>
-                        <textarea name="Message" rows="6" placeholder="Add your Message"></textarea>
-                        <button type="submit" class="btn btn2">Submit</button>
-                    </form>
-                </div>
-            </div>
+  </section>
+
+  <section id="experience" aria-labelledby="exp-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="exp-h">Experience and education</h2>
+      </div>
+      <div class="two-col">
+        <div>
+          <h3>Experience</h3>
+          <ul class="timeline">
+            <li>
+              <p class="when">Current</p>
+              <p class="what">Intern</p>
+              <p class="where">Xpectrum AI</p>
+              <p class="note">Working at an enterprise agentic AI platform, on growth content and full stack web features.</p>
+            </li>
+            <li>
+              <p class="when">2024 to present</p>
+              <p class="what">Web designer</p>
+              <p class="where">TexergeLab</p>
+              <p class="note">Designing and building responsive websites and interfaces for clients.</p>
+            </li>
+            <li>
+              <p class="when">2024</p>
+              <p class="what">Intern</p>
+              <p class="where">TexergeLab</p>
+              <p class="note">Started here as an intern before moving into the web designer role.</p>
+            </li>
+          </ul>
         </div>
-        <div class="copyright">
-            <p>© 2025 Rimi Chakraborty. All rights reserved.<br> Designed with HTML,CSS & Javascript.</p>
+        <div>
+          <h3>Education</h3>
+          <ul class="timeline">
+            <li>
+              <p class="when">2024 to 2027</p>
+              <p class="what">B.Tech in Computer Science and Engineering</p>
+              <p class="where">Maulana Abul Kalam Azad University of Technology</p>
+            </li>
+            <li>
+              <p class="when">2020 to 2024</p>
+              <p class="what">Diploma in Computer Science and Technology</p>
+              <p class="where">Women's Polytechnic, Kolkata</p>
+            </li>
+          </ul>
         </div>
+      </div>
     </div>
+  </section>
 
+  <section id="contact" aria-labelledby="contact-h">
+    <div class="wrap contact-grid">
+      <div class="contact-info">
+        <h2 id="contact-h" style="font-size: clamp(1.9rem, 3.6vw, 2.7rem);">Have a project or a role in mind?</h2>
+        <p style="margin-top: 14px; color: var(--muted); max-width: 44ch;">Send a message with what you need and a rough timeline. I reply within a couple of days.</p>
+        <ul>
+          <li><span class="label">Email</span><a href="mailto:rimi.reach@gmail.com">rimi.reach@gmail.com</a></li>
+          <li><span class="label">LinkedIn</span><a href="https://www.linkedin.com/in/rimi-chakraborty/" target="_blank" rel="noopener">rimi-chakraborty</a></li>
+          <li><span class="label">GitHub</span><a href="https://github.com/rimichak" target="_blank" rel="noopener">rimichak</a></li>
+          <li><span class="label">Medium</span><a href="https://medium.com/@rimi.reach" target="_blank" rel="noopener">@rimi.reach</a></li>
+        </ul>
+      </div>
 
+      <form class="form" id="contactForm" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+          <p class="err" id="nameErr"></p>
+        </div>
+        <div class="field">
+          <label for="email">Your email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+          <p class="err" id="emailErr"></p>
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required></textarea>
+          <p class="err" id="messageErr"></p>
+        </div>
+        <button class="btn primary" type="submit">Send message</button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
 
-    <script>
-        var tablinks = document.getElementsByClassName("tab-links");
-        var tabcontents = document.getElementsByClassName("tab-contents");
-        function opentab(tabname){
-            for(tablink of tablinks){
-                tablink.classList.remove("active-link");
-            }
-            for(tabcontent of tabcontents){
-                tabcontent.classList.remove("active-tab");
-            }
-            event.currentTarget.classList.add("active-link");
-            document.getElementById(tabname).classList.add("active-tab");
-        }
-    </script>
-    <script>
-        var sidemenu = document.getElementById("sidemenu");
+<footer>
+  <div class="wrap">
+    <p>&copy; <span id="year">2026</span> Rimi Chakraborty</p>
+    <p>Built with HTML, CSS and JavaScript.</p>
+  </div>
+</footer>
 
-        function openmenu(){
-            sidemenu.classList.add("open");
-        }
-        function closemenu(){
-            sidemenu.classList.remove("open");
-        }
-    </script>
+<script>
+  // Theme toggle
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeBtn');
+    function systemDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+    function current() {
+      var set = root.getAttribute('data-theme');
+      return set ? set : (systemDark() ? 'dark' : 'light');
+    }
+    function paint() { btn.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }
+    try {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') root.setAttribute('data-theme', saved);
+    } catch (e) {}
+    paint();
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      paint();
+    });
+  })();
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Contact form
+  // When your FastAPI back end is live, put its URL here, for example:
+  // var CONTACT_API = "https://your-api.onrender.com/api/contact";
+  // Until then the form opens the visitor's email app with the message filled in.
+  var CONTACT_API = "";
+  var TO_EMAIL = "rimi.reach@gmail.com";
+
+  (function () {
+    var form = document.getElementById('contactForm');
+    var status = document.getElementById('formStatus');
+
+    function setError(id, msg) {
+      var input = document.getElementById(id);
+      document.getElementById(id + 'Err').textContent = msg;
+      if (msg) { input.setAttribute('aria-invalid', 'true'); } else { input.removeAttribute('aria-invalid'); }
+      return !msg;
+    }
+    function say(text, kind) { status.textContent = text; status.className = 'form-status ' + (kind || ''); }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = form.name.value.trim();
+      var email = form.email.value.trim();
+      var message = form.message.value.trim();
+
+      var ok = true;
+      ok = setError('name', name ? '' : 'Enter your name.') && ok;
+      ok = setError('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'Enter a valid email address.') && ok;
+      ok = setError('message', message.length >= 10 ? '' : 'Write at least a couple of sentences.') && ok;
+      if (!ok) { say('Fix the highlighted fields and try again.', 'bad'); return; }
+
+      if (CONTACT_API) {
+        say('Sending...', '');
+        fetch(CONTACT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, message: message })
+        }).then(function (r) {
+          if (!r.ok) { throw new Error('bad response'); }
+          form.reset();
+          say('Message sent. I will reply to ' + email + '.', 'ok');
+        }).catch(function () {
+          say('The message did not go through. Email ' + TO_EMAIL + ' directly instead.', 'bad');
+        });
+      } else {
+        var subject = encodeURIComponent('Portfolio message from ' + name);
+        var body = encodeURIComponent(message + '\n\nFrom: ' + name + ' (' + email + ')');
+        window.location.href = 'mailto:' + TO_EMAIL + '?subject=' + subject + '&body=' + body;
+        say('Your email app should open with the message ready. If it does not, write to ' + TO_EMAIL + '.', 'ok');
+      }
+    });
+  })();
+</script>
 </body>
 </html>
