@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin | Rimi Chakraborty</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%23FFC933%22/><text x=%2250%22 y=%2272%22 font-size=%2266%22 font-weight=%22700%22 text-anchor=%22middle%22 fill=%22%2313203B%22 font-family=%22sans-serif%22>R</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0C1424; --surface: #131E35; --surface-2: #1A2842; --ink: #EAF0FB; --muted: #93A2C2;
+    --line: #24314D; --taxi: #FFC933; --on-taxi: #13203B; --red: #FF8A82; --green: #7FE3B0;
+    --font-head: "Bricolage Grotesque", sans-serif; --font-body: "Figtree", sans-serif;
+    --font-code: ui-monospace, Menlo, Consolas, monospace;
+    box-sizing: border-box;
+  }
+  * , *::before, *::after { box-sizing: inherit; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.5; }
+  h1, h2, h3 { font-family: var(--font-head); margin: 0; letter-spacing: -0.01em; }
+  button, input, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--taxi); outline-offset: 2px; }
+  .wrap { width: min(1000px, 100% - 40px); margin-inline: auto; }
+
+  /* Login */
+  .login-screen { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+  .login-card { width: min(360px, 100%); background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 32px; }
+  .login-card h1 { font-size: 1.5rem; margin-bottom: 6px; }
+  .login-card p.sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 24px; }
+  .field { display: grid; gap: 6px; margin-bottom: 16px; }
+  .field label { font-size: 0.92rem; font-weight: 600; }
+  .field input { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 11px 13px; width: 100%; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; font-size: 0.95rem;
+    padding: 11px 18px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+  .btn:hover { border-color: var(--ink); }
+  .btn.primary { background: var(--taxi); color: var(--on-taxi); border-color: var(--taxi); width: 100%; }
+  .btn.primary:hover { filter: brightness(0.95); }
+  .btn.danger { color: var(--red); border-color: #4A2A2A; }
+  .btn.small { padding: 6px 12px; font-size: 0.85rem; }
+  .msg { font-size: 0.9rem; min-height: 1.3em; margin-top: 4px; }
+  .msg.bad { color: var(--red); }
+  .msg.ok { color: var(--green); }
+
+  /* App shell */
+  .app { display: none; min-height: 100vh; }
+  .topbar { border-bottom: 1px solid var(--line); }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; gap: 16px; flex-wrap: wrap; }
+  .topbar h1 { font-size: 1.15rem; }
+  .tabs { display: flex; gap: 4px; margin: 24px 0; border-bottom: 1px solid var(--line); }
+  .tab { padding: 10px 4px; margin-right: 24px; background: none; border: none; color: var(--muted); font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; }
+  .tab.active { color: var(--ink); border-bottom-color: var(--taxi); }
+  .panel { display: none; padding-bottom: 60px; }
+  .panel.active { display: block; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 28px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .stat .n { font-family: var(--font-head); font-size: 1.7rem; font-weight: 700; }
+  .stat .l { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+
+  .card-list { display: grid; gap: 12px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .card.unread { border-color: var(--taxi); }
+  .card-top { display: flex; justify-content: space-between; align-items: start; gap: 12px; flex-wrap: wrap; }
+  .card-top .who { font-weight: 600; }
+  .card-top .who a { color: var(--muted); font-weight: 400; font-size: 0.9rem; }
+  .card-top .when { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+  .card-body { margin-top: 10px; color: var(--ink); white-space: pre-wrap; }
+  .card-actions { margin-top: 14px; display: flex; gap: 8px; }
+  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+
+  .proj-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
+  .proj-card .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .proj-card .fields .full { grid-column: 1 / -1; }
+  .proj-card textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; width: 100%; min-height: 70px; resize: vertical; }
+  .proj-card input { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; width: 100%; }
+  .proj-card label { font-size: 0.82rem; color: var(--muted); display: block; margin-bottom: 4px; }
+
+  @media (max-width: 640px) {
+    .proj-card .fields { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h1>Admin</h1>
+    <p class="sub">Sign in to manage messages and projects.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn primary" type="submit">Sign in</button>
+      <p class="msg" id="loginMsg" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="wrap">
+      <h1>Portfolio admin</h1>
+      <button class="btn small" id="logoutBtn" type="button">Sign out</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="stat-row" id="stats"></div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="messages" type="button">Messages</button>
+      <button class="tab" data-tab="projects" type="button">Projects</button>
+    </div>
+
+    <section class="panel active" id="panel-messages">
+      <div class="card-list" id="messageList"></div>
+    </section>
+
+    <section class="panel" id="panel-projects">
+      <div class="proj-head">
+        <h2 style="font-size:1.2rem;">Your projects</h2>
+        <button class="btn small primary" id="newProjectBtn" type="button">Add project</button>
+      </div>
+      <div class="card-list" id="projectList"></div>
+    </section>
+  </div>
+</div>
+
+<script>
+  // Set this to your live Render URL, same one used in index.html.
+  var API_BASE = "https://rimichak-github-io.onrender.com";
+
+  var token = sessionStorage.getItem("admin_token") || "";
+
+  var loginScreen = document.getElementById("loginScreen");
+  var app = document.getElementById("app");
+  var loginForm = document.getElementById("loginForm");
+  var loginMsg = document.getElementById("loginMsg");
+
+  function showApp() {
+    loginScreen.style.display = "none";
+    app.style.display = "block";
+    loadStats();
+    loadMessages();
+    loadProjects();
+  }
+
+  if (token) { showApp(); }
+
+  loginForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var username = document.getElementById("username").value.trim();
+    var password = document.getElementById("password").value;
+    loginMsg.textContent = "Signing in...";
+    loginMsg.className = "msg";
+    fetch(API_BASE + "/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username, password: password })
+    }).then(function (r) {
+      if (!r.ok) { throw new Error("bad credentials"); }
+      return r.json();
+    }).then(function (data) {
+      token = data.access_token;
+      sessionStorage.setItem("admin_token", token);
+      loginMsg.textContent = "";
+      showApp();
+    }).catch(function () {
+      loginMsg.textContent = "Wrong username or password.";
+      loginMsg.className = "msg bad";
+    });
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", function () {
+    token = "";
+    sessionStorage.removeItem("admin_token");
+    app.style.display = "none";
+    loginScreen.style.display = "grid";
+  });
+
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("active"); });
+      document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("active"); });
+      tab.classList.add("active");
+      document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+    });
+  });
+
+  function authFetch(path, options) {
+    options = options || {};
+    options.headers = Object.assign({}, options.headers, { "Authorization": "Bearer " + token });
+    return fetch(API_BASE + path, options).then(function (r) {
+      if (r.status === 401) {
+        sessionStorage.removeItem("admin_token");
+        app.style.display = "none";
+        loginScreen.style.display = "grid";
+        loginMsg.textContent = "Session expired, sign in again.";
+        loginMsg.className = "msg bad";
+        throw new Error("unauthorized");
+      }
+      return r;
+    });
+  }
+
+  function loadStats() {
+    authFetch("/api/admin/stats").then(function (r) { return r.json(); }).then(function (s) {
+      var el = document.getElementById("stats");
+      el.innerHTML = "";
+      var items = [
+        [s.unread_messages, "Unread messages"],
+        [s.total_messages, "Total messages"],
+        [s.total_projects, "Projects"],
+        [s.total_page_views, "Page views"]
+      ];
+      items.forEach(function (it) {
+        var d = document.createElement("div");
+        d.className = "stat";
+        d.innerHTML = '<div class="n">' + it[0] + '</div><div class="l">' + it[1] + '</div>';
+        el.appendChild(d);
+      });
+    }).catch(function () {});
+  }
+
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = s == null ? "" : s;
+    return d.innerHTML;
+  }
+
+  function loadMessages() {
+    var list = document.getElementById("messageList");
+    list.innerHTML = '<p class="empty">Loading...</p>';
+    authFetch("/api/contact").then(function (r) { return r.json(); }).then(function (messages) {
+      if (!messages.length) { list.innerHTML = '<p class="empty">No messages yet.</p>'; return; }
+      list.innerHTML = "";
+      messages.forEach(function (m) {
+        var card = document.createElement("div");
+        card.className = "card" + (m.read ? "" : " unread");
+        var when = new Date(m.created_at).toLocaleString();
+        card.innerHTML =
+          '<div class="card-top">' +
+            '<div class="who">' + esc(m.name) + ' &middot; <a href="mailto:' + esc(m.email) + '">' + esc(m.email) + '</a></div>' +
+            '<div class="when">' + esc(when) + '</div>' +
+          '</div>' +
+          '<div class="card-body">' + esc(m.message) + '</div>' +
+          '<div class="card-actions"></div>';
+        if (!m.read) {
+          var btn = document.createElement("button");
+          btn.className = "btn small";
+          btn.type = "button";
+          btn.textContent = "Mark as read";
+          btn.addEventListener("click", function () {
+            authFetch("/api/contact/" + m.id + "/read", { method: "PATCH" })
+              .then(loadMessages).then(loadStats);
+          });
+          card.querySelector(".card-actions").appendChild(btn);
+        }
+        list.appendChild(card);
+      });
+    }).catch(function () {
+      list.innerHTML = '<p class="empty">Could not load messages.</p>';
+    });
+  }
+
+  function projectFieldsHtml(p) {
+    p = p || {};
+    return (
+      '<div class="fields">' +
+        '<div><label>Title</label><input class="f-title" value="' + esc(p.title) + '"></div>' +
+        '<div><label>Kind / year</label><input class="f-kind" value="' + esc(p.kind) + '"></div>' +
+        '<div class="full"><label>Description</label><textarea class="f-desc">' + esc(p.description) + '</textarea></div>' +
+        '<div><label>Stack</label><input class="f-stack" value="' + esc(p.stack) + '"></div>' +
+        '<div><label>Sort order</label><input class="f-sort" type="number" value="' + (p.sort_order || 0) + '"></div>' +
+        '<div><label>Code URL</label><input class="f-code" value="' + esc(p.code_url) + '"></div>' +
+        '<div><label>Live URL</label><input class="f-live" value="' + esc(p.live_url) + '"></div>' +
+      '</div>'
+    );
+  }
+
+  function readProjectFields(card) {
+    return {
+      title: card.querySelector(".f-title").value.trim(),
+      kind: card.querySelector(".f-kind").value.trim(),
+      description: card.querySelector(".f-desc").value.trim(),
+      stack: card.querySelector(".f-stack").value.trim(),
+      sort_order: parseInt(card.querySelector(".f-sort").value, 10) || 0,
+      code_url: card.querySelector(".f-code").value.trim() || null,
+      live_url: card.querySelector(".f-live").value.trim() || null
+    };
+  }
+
+  function loadProjects() {
+    var list = document.getElementById("projectList");
+    list.innerHTML = '<p class="empty">Loading...</p>';
+    fetch(API_BASE + "/api/projects").then(function (r) { return r.json(); }).then(function (projects) {
+      list.innerHTML = "";
+      if (!projects.length) { list.innerHTML = '<p class="empty">No projects yet. Add one above.</p>'; }
+      projects.forEach(function (p) {
+        var card = document.createElement("div");
+        card.className = "card proj-card";
+        card.innerHTML = projectFieldsHtml(p) + '<div class="card-actions"></div>';
+        var actions = card.querySelector(".card-actions");
+
+        var saveBtn = document.createElement("button");
+        saveBtn.className = "btn small primary";
+        saveBtn.type = "button";
+        saveBtn.textContent = "Save";
+        saveBtn.addEventListener("click", function () {
+          authFetch("/api/projects/" + p.id, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(readProjectFields(card))
+          }).then(loadProjects).then(loadStats);
+        });
+
+        var delBtn = document.createElement("button");
+        delBtn.className = "btn small danger";
+        delBtn.type = "button";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", function () {
+          if (!confirm("Delete \"" + p.title + "\"? This can't be undone.")) { return; }
+          authFetch("/api/projects/" + p.id, { method: "DELETE" }).then(loadProjects).then(loadStats);
+        });
+
+        actions.appendChild(saveBtn);
+        actions.appendChild(delBtn);
+        list.appendChild(card);
+      });
+    }).catch(function () {
+      list.innerHTML = '<p class="empty">Could not load projects.</p>';
+    });
+  }
+
+  document.getElementById("newProjectBtn").addEventListener("click", function () {
+    var list = document.getElementById("projectList");
+    var card = document.createElement("div");
+    card.className = "card proj-card";
+    card.innerHTML = projectFieldsHtml({ sort_order: 0 }) + '<div class="card-actions"></div>';
+    var actions = card.querySelector(".card-actions");
+
+    var createBtn = document.createElement("button");
+    createBtn.className = "btn small primary";
+    createBtn.type = "button";
+    createBtn.textContent = "Create";
+    createBtn.addEventListener("click", function () {
+      var fields = readProjectFields(card);
+      if (!fields.title) { alert("Give it a title first."); return; }
+      authFetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fields)
+      }).then(loadProjects).then(loadStats);
+    });
+
+    actions.appendChild(createBtn);
+    list.insertBefore(card, list.firstChild);
+  });
+</script>
+</body>
+</html>
