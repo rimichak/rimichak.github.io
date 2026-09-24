@@ -166,6 +166,13 @@
   .stack-grid h3 { font-size: 1.15rem; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 2px solid var(--taxi); display: inline-block; }
   .stack-grid li { padding: 6px 0; }
 
+  /* Certificates */
+  .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .cert-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; }
+  .cert-card .issuer { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
+  .cert-card .when { color: var(--muted); font-size: 0.88rem; margin-top: 10px; }
+  @media (max-width: 640px) { .cert-grid { grid-template-columns: 1fr; } }
+
   /* Timeline: this content is a real sequence */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
   .two-col h3 { font-size: 1.5rem; margin-bottom: 28px; }
@@ -244,6 +251,7 @@
       <a class="link" href="#work">Work</a>
       <a class="link" href="#stack">Stack</a>
       <a class="link" href="#experience">Experience</a>
+      <a class="link" href="#certificates">Certificates</a>
       <a class="link" href="#contact">Contact</a>
       <button class="theme-btn" id="themeBtn" type="button">Dark mode</button>
     </nav>
@@ -451,6 +459,41 @@
     </div>
   </section>
 
+  <section id="certificates" aria-labelledby="cert-h">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="cert-h">Certifications</h2>
+      </div>
+      <div class="cert-grid">
+        <div class="cert-card">
+          <h3 style="font-size: 1.1rem;">AWS Cloud Practitioner Essentials</h3>
+          <p class="issuer">Amazon Web Services</p>
+          <p class="when">March 2025</p>
+        </div>
+        <div class="cert-card">
+          <h3 style="font-size: 1.1rem;">Introduction to Linux (LFS101)</h3>
+          <p class="issuer">The Linux Foundation</p>
+          <p class="when">August 2025</p>
+        </div>
+        <div class="cert-card">
+          <h3 style="font-size: 1.1rem;">Hackathon Participation</h3>
+          <p class="issuer">WeMakeDevs</p>
+          <p class="when">2025</p>
+        </div>
+        <div class="cert-card">
+          <h3 style="font-size: 1.1rem;">SQL (4 star)</h3>
+          <p class="issuer">HackerRank</p>
+          <p class="when">2025</p>
+        </div>
+        <div class="cert-card">
+          <h3 style="font-size: 1.1rem;">Diploma in Computer Science & Technology</h3>
+          <p class="issuer">Women's Polytechnic, West Bengal State Council of Technical and Vocational Education and Skill Development</p>
+          <p class="when">2024 &middot; 1st Class with Distinction, OGPA 8.10</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="contact" aria-labelledby="contact-h">
     <div class="wrap contact-grid">
       <div class="contact-info">
@@ -522,9 +565,6 @@
   document.getElementById('year').textContent = new Date().getFullYear();
 
   // Contact form
-  // When your FastAPI back end is live, put its URL here, for example:
-  // var CONTACT_API = "https://your-api.onrender.com/api/contact";
-  // Until then the form opens the visitor's email app with the message filled in.
   var CONTACT_API = "https://rimichak-github-io.onrender.com/api/contact";
   var TO_EMAIL = "rimi.reach@gmail.com";
 
