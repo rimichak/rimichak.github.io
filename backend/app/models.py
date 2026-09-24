@@ -30,6 +30,17 @@ class Project(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class Certificate(Base):
+    __tablename__ = "certificates"
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    issuer = Column(String(200), nullable=False, default="")
+    when_text = Column(String(160), nullable=False, default="")
+    sort_order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 class PageView(Base):
     __tablename__ = "page_views"
 

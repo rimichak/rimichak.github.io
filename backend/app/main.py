@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.database import Base, engine, get_db
 from app import models
-from app.routers import contact, projects, admin
+from app.routers import contact, projects, certificates, admin
 
 Base.metadata.create_all(bind=engine)
 
@@ -21,6 +21,7 @@ app.add_middleware(
 
 app.include_router(contact.router)
 app.include_router(projects.router)
+app.include_router(certificates.router)
 app.include_router(admin.router)
 
 
@@ -75,5 +76,41 @@ def seed_projects():
             ),
         ]
         db.add_all(seed)
+        db.commit()
+
+    if db.query(models.Certificate).count() == 0:
+        cert_seed = [
+            models.Certificate(
+                title="AWS Cloud Practitioner Essentials",
+                issuer="Amazon Web Services",
+                when_text="March 2025",
+                sort_order=1,
+            ),
+            models.Certificate(
+                title="Introduction to Linux (LFS101)",
+                issuer="The Linux Foundation",
+                when_text="August 2025",
+                sort_order=2,
+            ),
+            models.Certificate(
+                title="Hackathon Participation",
+                issuer="WeMakeDevs",
+                when_text="2025",
+                sort_order=3,
+            ),
+            models.Certificate(
+                title="SQL (4 star)",
+                issuer="HackerRank",
+                when_text="2025",
+                sort_order=4,
+            ),
+            models.Certificate(
+                title="Diploma in Computer Science & Technology",
+                issuer="Women's Polytechnic, West Bengal State Council of Technical and Vocational Education and Skill Development",
+                when_text="2024 \u00b7 1st Class with Distinction, OGPA 8.10",
+                sort_order=5,
+            ),
+        ]
+        db.add_all(cert_seed)
         db.commit()
     db.close()

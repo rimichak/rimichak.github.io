@@ -25,5 +25,6 @@ def stats(db: Session = Depends(get_db), _admin: str = Depends(require_admin)):
         "total_messages": db.query(models.ContactMessage).count(),
         "unread_messages": db.query(models.ContactMessage).filter(models.ContactMessage.read.is_(False)).count(),
         "total_projects": db.query(models.Project).count(),
+        "total_certificates": db.query(models.Certificate).count(),
         "total_page_views": db.query(models.PageView).count(),
     }

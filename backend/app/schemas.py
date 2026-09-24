@@ -50,6 +50,30 @@ class ProjectOut(ProjectBase):
     created_at: datetime
 
 
+class CertificateBase(BaseModel):
+    title: str = Field(min_length=1, max_length=200)
+    issuer: str = ""
+    when_text: str = ""
+    sort_order: int = 0
+
+
+class CertificateCreate(CertificateBase):
+    pass
+
+
+class CertificateUpdate(BaseModel):
+    title: Optional[str] = None
+    issuer: Optional[str] = None
+    when_text: Optional[str] = None
+    sort_order: Optional[int] = None
+
+
+class CertificateOut(CertificateBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    created_at: datetime
+
+
 class LoginRequest(BaseModel):
     username: str
     password: str

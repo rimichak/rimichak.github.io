@@ -116,6 +116,7 @@
     <div class="tabs">
       <button class="tab active" data-tab="messages" type="button">Messages</button>
       <button class="tab" data-tab="projects" type="button">Projects</button>
+      <button class="tab" data-tab="certificates" type="button">Certificates</button>
     </div>
 
     <section class="panel active" id="panel-messages">
@@ -128,6 +129,14 @@
         <button class="btn small primary" id="newProjectBtn" type="button">Add project</button>
       </div>
       <div class="card-list" id="projectList"></div>
+    </section>
+
+    <section class="panel" id="panel-certificates">
+      <div class="proj-head">
+        <h2 style="font-size:1.2rem;">Your certificates</h2>
+        <button class="btn small primary" id="newCertBtn" type="button">Add certificate</button>
+      </div>
+      <div class="card-list" id="certList"></div>
     </section>
   </div>
 </div>
@@ -149,6 +158,7 @@
     loadStats();
     loadMessages();
     loadProjects();
+    loadCertificates();
   }
 
   if (token) { showApp(); }
@@ -217,6 +227,7 @@
         [s.unread_messages, "Unread messages"],
         [s.total_messages, "Total messages"],
         [s.total_projects, "Projects"],
+        [s.total_certificates, "Certificates"],
         [s.total_page_views, "Page views"]
       ];
       items.forEach(function (it) {
@@ -357,6 +368,94 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fields)
       }).then(loadProjects).then(loadStats);
+    });
+
+    actions.appendChild(createBtn);
+    list.insertBefore(card, list.firstChild);
+  });
+
+  function certFieldsHtml(c) {
+    c = c || {};
+    return (
+      '<div class="fields">' +
+        '<div class="full"><label>Title</label><input class="c-title" value="' + esc(c.title) + '"></div>' +
+        '<div><label>Issuer</label><input class="c-issuer" value="' + esc(c.issuer) + '"></div>' +
+        '<div><label>When / result</label><input class="c-when" value="' + esc(c.when_text) + '"></div>' +
+        '<div><label>Sort order</label><input class="c-sort" type="number" value="' + (c.sort_order || 0) + '"></div>' +
+      '</div>'
+    );
+  }
+
+  function readCertFields(card) {
+    return {
+      title: card.querySelector(".c-title").value.trim(),
+      issuer: card.querySelector(".c-issuer").value.trim(),
+      when_text: card.querySelector(".c-when").value.trim(),
+      sort_order: parseInt(card.querySelector(".c-sort").value, 10) || 0
+    };
+  }
+
+  function loadCertificates() {
+    var list = document.getElementById("certList");
+    list.innerHTML = '<p class="empty">Loading...</p>';
+    fetch(API_BASE + "/api/certificates").then(function (r) { return r.json(); }).then(function (certs) {
+      list.innerHTML = "";
+      if (!certs.length) { list.innerHTML = '<p class="empty">No certificates yet. Add one above.</p>'; }
+      certs.forEach(function (c) {
+        var card = document.createElement("div");
+        card.className = "card proj-card";
+        card.innerHTML = certFieldsHtml(c) + '<div class="card-actions"></div>';
+        var actions = card.querySelector(".card-actions");
+
+        var saveBtn = document.createElement("button");
+        saveBtn.className = "btn small primary";
+        saveBtn.type = "button";
+        saveBtn.textContent = "Save";
+        saveBtn.addEventListener("click", function () {
+          authFetch("/api/certificates/" + c.id, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(readCertFields(card))
+          }).then(loadCertificates).then(loadStats);
+        });
+
+        var delBtn = document.createElement("button");
+        delBtn.className = "btn small danger";
+        delBtn.type = "button";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", function () {
+          if (!confirm("Delete \"" + c.title + "\"? This can't be undone.")) { return; }
+          authFetch("/api/certificates/" + c.id, { method: "DELETE" }).then(loadCertificates).then(loadStats);
+        });
+
+        actions.appendChild(saveBtn);
+        actions.appendChild(delBtn);
+        list.appendChild(card);
+      });
+    }).catch(function () {
+      list.innerHTML = '<p class="empty">Could not load certificates.</p>';
+    });
+  }
+
+  document.getElementById("newCertBtn").addEventListener("click", function () {
+    var list = document.getElementById("certList");
+    var card = document.createElement("div");
+    card.className = "card proj-card";
+    card.innerHTML = certFieldsHtml({ sort_order: 0 }) + '<div class="card-actions"></div>';
+    var actions = card.querySelector(".card-actions");
+
+    var createBtn = document.createElement("button");
+    createBtn.className = "btn small primary";
+    createBtn.type = "button";
+    createBtn.textContent = "Create";
+    createBtn.addEventListener("click", function () {
+      var fields = readCertFields(card);
+      if (!fields.title) { alert("Give it a title first."); return; }
+      authFetch("/api/certificates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fields)
+      }).then(loadCertificates).then(loadStats);
     });
 
     actions.appendChild(createBtn);
